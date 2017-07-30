@@ -67,8 +67,8 @@ class Participants extends Component {
 
       // After n seconds, end the training recording and re-enable the UI.
       setTimeout(() => {
-        window.recorder.stopRecording(e);
         this.waiting = {status: 'STOPPING', email};
+        window.recorder.stopRecording(e);
 
         this.setState(
           Object.assign(this.state, {
