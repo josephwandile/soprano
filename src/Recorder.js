@@ -88,7 +88,8 @@ class Recorder extends Component {
     if (this.state.isCurrentlyRecording || this.state.recorder) {
       console.log("Recording stopped.");
       this.state.recorder.stop();
-      this.setState({ isCurrentlyRecording: false, recorder: null, })
+      this.started = false;
+      this.setState({isCurrentlyRecording: false, recorder: null})
     } else {
       this.showBanner("Not currently recording.");
     }
