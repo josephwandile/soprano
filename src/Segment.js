@@ -16,7 +16,7 @@ class Segment extends Component {
   }
 
   fetchObservation = () => {
-    fetch(`http://localhost:5000/observe/${this.props.id}`, {credentials: 'include'})
+    fetch(`http://${window.location.hostname}:5000/observe/${this.props.id}`, {credentials: 'include'})
       .then(resp => resp.json())
       .then(resp => {
         if (resp.error) {
