@@ -4,6 +4,7 @@ import '../node_modules/font-awesome/css/font-awesome.css';
 import './App.css';
 import Participant from './Participant.js';
 import 'whatwg-fetch';
+import randomColor from 'randomcolor';
 
 
 class Participants extends Component {
@@ -12,14 +13,7 @@ class Participants extends Component {
     super(props);
     this.waiting = null;
     this.state = {
-      participants: {
-        'joekahn13@gmail.com': {
-          training: false,
-        },
-        'yasyfm@gmail.com': {
-          training: false,
-        },
-      },
+      participants: {},
       newEmail: 'example@gmail.com',
     };
   }
@@ -47,27 +41,48 @@ class Participants extends Component {
   }
 
   participantClicked = (e, email) => {
-    let training = this.state.participants[email].training;
-    let status = training ? 'STOPPING' : 'STARTING';
 
-    if (training) {
-      this.waiting = {status, email};
-      window.recorder.stopRecording(e);
+    const trained = this.state.participants[email].trained;
+    const training = this.state.participants[email].training;
+
+    if (trained) {
+      console.log("Already trained.");
+    } else if (training) {
+      console.log("Currently training.");
     } else {
+
+      // Start recording for training data
+      this.setState(Object.assign(this.state, {
+        participants: {
+          ...this.state.participants,
+          [email]: {
+            'training': true,
+          },
+        }
+      }));
       window.recorder.toggleDisabled();
-      this.sendControlMessage(email, status).then(() => window.recorder.startOrResumeRecording(e));
+      this.sendControlMessage(email, 'STARTING').then(() => window.recorder.startOrResumeRecording(e));
+
+      // After n seconds, end the training recording and re-enable the UI.
+      setTimeout(() => {
+
+        window.recorder.toggleDisabled();
+        this.sendControlMessage(email, 'STOPPING').then(() => window.recorder.stopRecording(e));
+
+        this.setState(
+          Object.assign(this.state, {
+            participants: {
+              ...this.state.participants,
+              [email]: {
+                'trained': true,
+                'training': false,
+              },
+            }
+          })
+        )
+      }, 4000);
     }
 
-    const newState = Object.assign(this.state, {
-      participants: {
-        ...this.state.participants,
-        [email]: {
-          'training': !this.state.participants[email].training
-        },
-      }
-    });
-
-    this.setState(newState);
   }
 
   handleChange = e => {
@@ -83,6 +98,7 @@ class Participants extends Component {
         ...this.state.participants,
         [this.state.newEmail]: {
           'training': false,
+          'color': randomColor(),
         },
       },
       newEmail: '',
@@ -96,11 +112,13 @@ class Participants extends Component {
         training={this.state.participants[email].training}
         email={email}
         onClickHandler={(e) => this.participantClicked(e, email)}
+        trained={this.state.participants[email].trained}
+        color={this.state.participants[email].color}
       />
     );
 
     return (
-      <div className="container">
+      <div className="container custom-container">
         <div className="field has-addons">
           <div className="control">
             <input

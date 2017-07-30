@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Break from './Break.js';
-import Words from './Words.js';
 
 class Segment extends Component {
   render() {
+
+    // Ignore empty transcripts
     if (!this.props.transcript.length) {
       return null;
     }
@@ -12,14 +12,14 @@ class Segment extends Component {
     let i = 0;
     this.props.transcript.forEach(trans => {
       if (trans.new) {
-        items.push(<Break key={`break-${i}`} speaker={trans.speaker}/>);
+        items.push(<br/>)
+        items.push(<span key={`break-${i}`} className="tag">{trans.speaker}</span>);
       }
-      items.push(<Words key={`words-${i}`} words={trans.transcript} />);
+      items.push(<span key={`words-${i}`}>{trans.transcript.join(' ')}</span>);
       items.push(' ');
       i++;
     });
-
-    return <div>{items}</div>;
+    return <div className="inline-block">{items}</div>;
   }
 };
 
