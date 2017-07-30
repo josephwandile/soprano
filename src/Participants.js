@@ -14,7 +14,7 @@ class Participants extends Component {
     this.waiting = null;
     this.state = {
       participants: {},
-      newEmail: 'example@gmail.com',
+      newEmail: '',
     };
   }
 
@@ -93,6 +93,11 @@ class Participants extends Component {
   }
 
   handleSubmit = e => {
+
+    if (!this.state.newEmail.length) {
+      return;
+    }
+
     this.setState(Object.assign(this.state, {
       participants: {
         ...this.state.participants,
@@ -123,13 +128,17 @@ class Participants extends Component {
           <div className="control">
             <input
               value={this.state.newEmail}
+              placeholder='example@gmail.com'
               className="input"
               type="text"
               onChange={this.handleChange}
             />
           </div>
           <div className="control" onClick={this.handleSubmit}>
-            <a className="button is-info">
+            <a
+              disabled={this.state.newEmail.length == 0 ? true : false}
+              className="button is-info"
+              >
               Add Participant
             </a>
           </div>
