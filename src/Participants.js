@@ -19,6 +19,7 @@ class Participants extends Component {
           training: false,
         },
       },
+      newEmail: 'example@gmail.com',
     };
   }
 
@@ -41,6 +42,24 @@ class Participants extends Component {
     this.setState(newState);
   }
 
+  handleChange = e => {
+    this.setState(Object.assign(this.state, {
+      ...this.state,
+      newEmail: e.target.value,
+    }));
+  }
+
+  handleSubmit = e => {
+    this.setState(Object.assign(this.state, {
+      participants: {
+        ...this.state.participants,
+        [this.state.newEmail]: {
+          'training': false,
+        },
+      }
+    }))
+  }
+
   render = () => {
 
     const participants = Object.keys(this.state.participants).map(email =>
@@ -54,6 +73,21 @@ class Participants extends Component {
 
     return (
       <div className="container">
+        <div className="field has-addons">
+          <div className="control">
+            <input
+              value={this.state.newEmail}
+              className="input"
+              type="text"
+              onChange={this.handleChange}
+            />
+          </div>
+          <div className="control" onClick={this.handleSubmit}>
+            <a className="button is-info">
+              Add Participant
+            </a>
+          </div>
+        </div>
         {participants}
       </div>
     );
