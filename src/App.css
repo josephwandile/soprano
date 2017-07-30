@@ -24,3 +24,8 @@
 .custom-container {
   width: 70%;
 }
+
+.speaker-tag {
+  margin-right: 5px;
+  margin-bottom: 10px;
+}

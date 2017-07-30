@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Speaker from './Speaker.js';
+import Sentence from './Sentence.js';
 
 class Segment extends Component {
   render() {
@@ -11,15 +13,14 @@ class Segment extends Component {
     let items = [];
     let i = 0;
     this.props.transcript.forEach(trans => {
-      if (trans.new) {
+      if (trans.new) {  // New speaker. Insert line break and speaker tag.
         items.push(<br/>)
-        items.push(<span key={`break-${i}`} className="tag">{trans.speaker}</span>);
+        items.push(<Speaker key={`break-${i}`} email={trans.speaker}/>);
       }
-      items.push(<span key={`words-${i}`}>{trans.transcript.join(' ')}</span>);
-      items.push(' ');
+      items.push(<Sentence key={`words-${i}`} words={trans.transcript.join(' ')}/>)
       i++;
     });
-    return <div className="inline-block">{items}</div>;
+    return <div>{items}</div>;
   }
 };
 
