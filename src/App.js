@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../node_modules/bulma/css/bulma.css';
 import './App.css';
 import Recorder from './Recorder.js';
+import Participants from './Participants.js';
 
 class App extends Component {
 
@@ -20,6 +21,9 @@ class App extends Component {
         </div>
         <div className="section">
           <Recorder/>
+        </div>
+        <div className="section">
+          <Participants/>
         </div>
       </div>
     );

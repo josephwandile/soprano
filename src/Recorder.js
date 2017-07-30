@@ -21,7 +21,7 @@ class Recorder extends Component {
         console.log(blob);
         // TODO PUT to localhost:5000/submit
     };
-    newRecorder.start(5000);  // Record blobs of 5 seconds each.
+    newRecorder.start(15000);  // Record blobs of 5 seconds each.
     this.setState({recorder: newRecorder, isCurrentlyRecording: true});
   }
 
