@@ -3,6 +3,7 @@ import '../node_modules/bulma/css/bulma.css';
 import '../node_modules/font-awesome/css/font-awesome.css';
 import './App.css';
 import MediaStreamRecorder from 'msr';
+import 'whatwg-fetch';
 
 class Recorder extends Component {
 
@@ -14,13 +15,31 @@ class Recorder extends Component {
     };
   }
 
+  submitToServer = (blob) => {
+    let timestamp = (new Date).toISOString().replace(/:|\./g, '-');
+    let file = new File([blob], 'msr-' + timestamp + '.wav', {type: 'audio/wav'});
+    let formData = new FormData();
+    formData.append('audio', file);
+    return fetch('/submit', {method: 'POST', body: formData}).then(resp => resp.json());
+  }
+
+  startTraining(email) {
+    let formData = new FormData();
+    formData.append('email', email);
+    formData.append('status', 'STARTING');
+    fetch('/control', {method: 'POST', body: formData}).then(this.startRecording);
+  }
+
+  stopTraining() {
+    let formData = new FormData();
+    formData.append('status', 'STOPPING');
+    fetch('/control', {method: 'POST', body: formData});
+  }
+
   onMediaSuccess = (stream) => {
     const newRecorder = new MediaStreamRecorder(stream);
     newRecorder.mimeType = 'audio/wav';
-    newRecorder.ondataavailable = function (blob) {
-        console.log(blob);
-        // TODO PUT to localhost:5000/submit
-    };
+    newRecorder.ondataavailable = this.submitToServer;
     newRecorder.start(5000);  // Record blobs of 5 seconds each.
     this.setState({recorder: newRecorder, isCurrentlyRecording: true});
   }
