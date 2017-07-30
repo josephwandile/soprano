@@ -20,12 +20,15 @@ class Segment extends Component {
 
     let items = [];
     let i = 0;
+    let last_speaker = "";
     this.props.transcript.forEach(trans => {
-      if (trans.new) {  // New speaker. Insert line break and speaker tag.
+      let speaker = trans.speaker;
+      if (speaker !== last_speaker) {  // New speaker. Insert line break and speaker tag.
         items.push(<br key={`ogbreak-${i}`}/>)
         items.push(<Speaker key={`break-${i}`} email={trans.speaker} participants={this.props.participants}/>);
       }
       items.push(<Sentence key={`words-${i}`} words={trans.transcript.join(' ')}/>)
+      last_speaker = speaker;
       i++;
     });
     return <div>{items}</div>;

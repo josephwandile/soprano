@@ -16,7 +16,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      transcript: {},
+      transcript: TranscriptMock,//{},
       participants: {},
       summary: null,
     };
@@ -95,8 +95,6 @@ class App extends Component {
         </div>
         <div className="section">
           <Recorder appendToTranscript={this.appendToTranscript}/>
-        </div>
-        <div className="section">
           <Transcript
             summary={this.state.summary}
             participants={this.state.participants}
