@@ -26,7 +26,7 @@ class Participants extends Component {
     let formData = new FormData();
     formData.append('email', email);
     formData.append('status', status);
-    return fetch(`http://${window.location.hostname}:8080/control`, {method: 'POST', body: formData, credentials: 'include'});
+    return fetch(`http://${window.location.hostname}/api/control`, {method: 'POST', body: formData, credentials: 'include'});
   }
 
   sendWaiting() {
