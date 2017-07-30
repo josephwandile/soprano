@@ -98,7 +98,7 @@ class Participants extends Component {
       return;
     }
 
-    const color = randomColor();
+    const color = randomColor({luminosity: 'light'});
 
     this.props.onAddParticipant({
       color,
