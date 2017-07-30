@@ -9,10 +9,20 @@ class Recorder extends Component {
 
   constructor(props) {
     super(props);
+    this.started = false;
     this.state = {
       recorder: null,
       isCurrentlyRecording: false,
+      disabled: false,
     };
+  }
+
+  componentDidMount() {
+    window.recorder = this;
+  }
+
+  toggleDisabled() {
+    this.setState({disabled: !this.state.disabled});
   }
 
   submitToServer = (blob) => {
@@ -20,7 +30,11 @@ class Recorder extends Component {
     let file = new File([blob], 'msr-' + timestamp + '.wav', {type: 'audio/wav'});
     let formData = new FormData();
     formData.append('audio', file);
-    return fetch('/submit', {method: 'POST', body: formData}).then(resp => resp.json());
+    return fetch('http://localhost:5000/submit', {method: 'POST', body: formData, credentials: 'include'})
+      .then(resp => {
+        window.participants.sendWaiting();
+        return resp.json();
+      }).then(({transcripts, id}) => this.props.appendToTranscript(id, transcripts));
   }
 
   onMediaSuccess = (stream) => {
@@ -39,6 +53,14 @@ class Recorder extends Component {
     console.log(msg);
   }
 
+  startOrResumeRecording = (e) => {
+    if (this.started) {
+      this.resumeRecording(e);
+    } else {
+      this.startRecording(e);
+    }
+  }
+
   startRecording = (e) => {
     e.preventDefault();
     if (this.state.isCurrentlyRecording || this.state.recorder) {
@@ -46,6 +68,7 @@ class Recorder extends Component {
     } else {
       console.log("Recording started.");
       navigator.getUserMedia({ audio: true, }, this.onMediaSuccess, this.onMediaError);
+      this.started = true;
     }
   }
 
@@ -86,7 +109,7 @@ class Recorder extends Component {
     return (
       <div className="field has-addons recorder">
         <p className="control">
-          <a onClick={this.startRecording} disabled={this.state.isCurrentlyRecording || this.state.recorder} className="button">
+          <a onClick={this.startRecording} disabled={this.state.disabled || (this.state.isCurrentlyRecording || this.state.recorder)} className="button">
             <span className="icon is-small">
               <i className={this.state.isCurrentlyRecording ? "fa fa-cog spinner" : "fa fa-microphone"}></i>
             </span>
@@ -94,7 +117,7 @@ class Recorder extends Component {
           </a>
         </p>
         <p className="control">
-          <a onClick={this.resumeRecording} disabled={this.state.isCurrentlyRecording || !this.state.recorder} className="button">
+          <a onClick={this.resumeRecording} disabled={this.state.disabled || (this.state.isCurrentlyRecording || !this.state.recorder)} className="button">
             <span className="icon is-small">
               <i className="fa fa-play"></i>
             </span>
@@ -102,7 +125,7 @@ class Recorder extends Component {
           </a>
         </p>
         <p className="control">
-          <a onClick={this.pauseRecording} disabled={!this.state.isCurrentlyRecording} className="button">
+          <a onClick={this.pauseRecording} disabled={this.state.disabled || (!this.state.isCurrentlyRecording)} className="button">
             <span className="icon is-small">
               <i className="fa fa-pause"></i>
             </span>
@@ -110,7 +133,7 @@ class Recorder extends Component {
           </a>
         </p>
         <p className="control">
-          <a onClick={this.stopRecording} disabled={!this.state.isCurrentlyRecording && !this.state.recorder} className="button">
+          <a onClick={this.stopRecording} disabled={this.state.disabled || (!this.state.isCurrentlyRecording && !this.state.recorder)} className="button">
             <span className="icon is-small">
               <i className="fa fa-stop"></i>
             </span>

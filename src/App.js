@@ -3,8 +3,28 @@ import '../node_modules/bulma/css/bulma.css';
 import './App.css';
 import Recorder from './Recorder.js';
 import Participants from './Participants.js';
+import Transcript from './Transcript.js';
+import 'whatwg-fetch';
+import update from 'immutability-helper';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      transcript: {}
+    };
+  }
+
+  componentDidMount() {
+    fetch('http://localhost:5000/reset', {method: 'POST', credentials: 'include'});
+  }
+
+  appendToTranscript = (id, transcripts) => {
+    let transcript = update(this.state.transcript, {[id]: {$set: transcripts}});
+    console.log(transcript);
+    this.setState({transcript});
+  }
 
   render() {
     return (
@@ -20,10 +40,13 @@ class App extends Component {
           </div>
         </div>
         <div className="section">
-          <Recorder/>
+          <Recorder appendToTranscript={this.appendToTranscript}/>
         </div>
         <div className="section">
           <Participants/>
+        </div>
+        <div className="section">
+          <Transcript transcript={this.state.transcript}/>
         </div>
       </div>
     );

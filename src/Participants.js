@@ -10,6 +10,7 @@ class Participants extends Component {
 
   constructor(props) {
     super(props);
+    this.waiting = null;
     this.state = {
       participants: {
         'joekahn13@gmail.com': {
@@ -23,12 +24,39 @@ class Participants extends Component {
     };
   }
 
-  participantClicked = email => {
+  componentDidMount() {
+    window.participants = this;
+  }
+
+  sendControlMessage = (email, status) => {
     let formData = new FormData();
     formData.append('email', email);
-    const status = this.state.participants[email].training ? 'STOPPING' : 'STARTING';
     formData.append('status', status);
-    fetch('http://localhost:5000/control', {method: 'POST', body: formData});
+    return fetch('http://localhost:5000/control', {method: 'POST', body: formData, credentials: 'include'});
+  }
+
+  sendWaiting() {
+    if (!this.waiting) {
+      return;
+    }
+    let {status, email} = this.waiting;
+    this.sendControlMessage(email, status).then(() => {
+      window.recorder.toggleDisabled();
+      this.waiting = null;
+    });
+  }
+
+  participantClicked = (e, email) => {
+    let training = this.state.participants[email].training;
+    let status = training ? 'STOPPING' : 'STARTING';
+
+    if (training) {
+      this.waiting = {status, email};
+      window.recorder.stopRecording(e);
+    } else {
+      window.recorder.toggleDisabled();
+      this.sendControlMessage(email, status).then(() => window.recorder.startOrResumeRecording(e));
+    }
 
     const newState = Object.assign(this.state, {
       participants: {
@@ -62,13 +90,12 @@ class Participants extends Component {
   }
 
   render = () => {
-
     const participants = Object.keys(this.state.participants).map(email =>
       <Participant
         key={email}
         training={this.state.participants[email].training}
         email={email}
-        onClickHandler={() => this.participantClicked(email)}
+        onClickHandler={(e) => this.participantClicked(e, email)}
       />
     );
 
