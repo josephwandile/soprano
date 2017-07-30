@@ -41,7 +41,7 @@ class Recorder extends Component {
     const newRecorder = new MediaStreamRecorder(stream);
     newRecorder.mimeType = 'audio/wav';
     newRecorder.ondataavailable = this.submitToServer;
-    newRecorder.start(15000);  // Record blobs of 5 seconds each.
+    newRecorder.start(5000);  // Record blobs of 5 seconds each.
     this.setState({recorder: newRecorder, isCurrentlyRecording: true});
   }
 

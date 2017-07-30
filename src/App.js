@@ -18,11 +18,22 @@ class App extends Component {
 
   componentDidMount() {
     fetch('http://localhost:5000/reset', {method: 'POST', credentials: 'include'});
+    setTimeout(this.fetchObservation, 1000);
+  }
+
+  fetchObservation = () => {
+    fetch(`http://localhost:5000/observe`, {credentials: 'include'})
+      .then(resp => resp.json())
+      .then(resp => {
+        if (!resp.error && resp.transcripts) {
+          this.appendToTranscript(resp.id, resp.transcripts);
+        }
+        setTimeout(this.fetchObservation, 1000);
+      });
   }
 
   appendToTranscript = (id, transcripts) => {
     let transcript = update(this.state.transcript, {[id]: {$set: transcripts}});
-    console.log(transcript);
     this.setState({transcript});
   }
 
