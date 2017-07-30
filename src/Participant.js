@@ -23,7 +23,7 @@ const Participant = (props) => {
             <p className="field">
               <a className="button" onClick={props.onClickHandler}>
                 <span className="icon is-small">
-                  <i className="fa fa-cog"></i>
+                  <i className={props.training ? "fa fa-cog spinner" : "fa fa-cog"}/>
                 </span>
               </a>
             </p>

@@ -23,19 +23,6 @@ class Recorder extends Component {
     return fetch('/submit', {method: 'POST', body: formData}).then(resp => resp.json());
   }
 
-  startTraining(email) {
-    let formData = new FormData();
-    formData.append('email', email);
-    formData.append('status', 'STARTING');
-    fetch('/control', {method: 'POST', body: formData}).then(this.startRecording);
-  }
-
-  stopTraining() {
-    let formData = new FormData();
-    formData.append('status', 'STOPPING');
-    fetch('/control', {method: 'POST', body: formData});
-  }
-
   onMediaSuccess = (stream) => {
     const newRecorder = new MediaStreamRecorder(stream);
     newRecorder.mimeType = 'audio/wav';

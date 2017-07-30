@@ -3,38 +3,42 @@ import '../node_modules/bulma/css/bulma.css';
 import '../node_modules/font-awesome/css/font-awesome.css';
 import './App.css';
 import Participant from './Participant.js';
-import update from 'immutability-helper';
+import 'whatwg-fetch';
+
 
 class Participants extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      participants: [
-        {
-          email: 'joekahn13@gmail.com',
+      participants: {
+        'joekahn13@gmail.com': {
+          training: false,
         },
-        {
-          email: 'yasyfm@gmail.com',
+        'yasyfm@gmail.com': {
+          training: false,
         },
-      ],
-      training: {
-        'joekahn13@gmail.com': 0,
-        'yasfym@gmail.com': 0,
       },
     };
   }
 
-  participantClicked = (email) => {
-    let count = this.state.training[email] + 1;
-    const training = update(this.state.training, {[email]: {$set: count}});
-    this.setState({training});
+  participantClicked = email => {
+    let formData = new FormData();
+    formData.append('email', email);
+    const status = this.state.participants[email].training ? 'STOPPING' : 'STARTING';
+    formData.append('status', status);
+    fetch('http://localhost:5000/control', {method: 'POST', body: formData});
   }
 
   render = () => {
 
-    const participants = this.state.participants.map((participant) =>
-      <Participant key={participant.email} email={participant.email} onClickHandler={() => this.participantClicked(participant.email)} />
+    const participants = Object.keys(this.state.participants).map(email =>
+      <Participant
+        key={email}
+        training={this.state.participants[email].training}
+        email={email}
+        onClickHandler={() => this.participantClicked(email)}
+      />
     );
 
     return (
