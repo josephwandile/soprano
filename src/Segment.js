@@ -11,24 +11,6 @@ class Segment extends Component {
     };
   }
 
-  componentDidMount() {
-    setTimeout(this.fetchObservation, 1000);
-  }
-
-  fetchObservation = () => {
-    fetch(`http://${window.location.hostname}:2053/observe/${this.props.id}`, {credentials: 'include'})
-      .then(resp => resp.json())
-      .then(resp => {
-        if (resp.error) {
-          return;
-        } else if (resp.retry) {
-          setTimeout(this.fetchObservation, 2000);
-        } else {
-          this.setState({transcript: resp.transcripts});
-        }
-      });
-  }
-
   render() {
 
     // Ignore empty transcripts
