@@ -34,7 +34,7 @@ class Recorder extends Component {
       .then(resp => {
         window.participants.sendWaiting();
         return resp.json();
-      });
+      }).then(({transcripts, id}) => this.props.appendToTranscript(id, transcripts));
   }
 
   onMediaSuccess = (stream) => {
