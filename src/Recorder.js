@@ -16,7 +16,7 @@ class Recorder extends Component {
   }
 
   submitToServer = (blob) => {
-    let timestamp = (new Date).toISOString().replace(/:|\./g, '-');
+    let timestamp = (new Date()).toISOString().replace(/:|\./g, '-');
     let file = new File([blob], 'msr-' + timestamp + '.wav', {type: 'audio/wav'});
     let formData = new FormData();
     formData.append('audio', file);
