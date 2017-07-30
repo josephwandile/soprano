@@ -60,6 +60,7 @@ class App extends Component {
           break;
         case 'summary':
           this.setState({summary: action.body});
+          break;
         default:
           break;
       }
