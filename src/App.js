@@ -23,12 +23,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch(`http://${window.location.hostname}/api/reset`, {method: 'POST', credentials: 'include'});
+    fetch(`//${window.location.hostname}/api/reset`, {method: 'POST', credentials: 'include'});
     setTimeout(this.fetchObservation, 1000);
   }
 
   fetchObservation = () => {
-    fetch(`http://${window.location.hostname}/api/observe`, {credentials: 'include'})
+    fetch(`//${window.location.hostname}/api/observe`, {credentials: 'include'})
       .then(resp => resp.json())
       .then(resp => {
         if (!resp.error && resp.transcripts) {

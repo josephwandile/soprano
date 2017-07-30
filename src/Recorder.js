@@ -30,7 +30,7 @@ class Recorder extends Component {
     let file = new File([blob], 'msr-' + timestamp + '.wav', {type: 'audio/wav'});
     let formData = new FormData();
     formData.append('audio', file);
-    return fetch(`http://${window.location.hostname}/api/submit`, {method: 'POST', body: formData, credentials: 'include'})
+    return fetch(`//${window.location.hostname}/api/submit`, {method: 'POST', body: formData, credentials: 'include'})
       .then(resp => {
         window.participants.sendWaiting();
         return resp.json();
