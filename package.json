@@ -11,6 +11,7 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-scripts": "1.0.10",
+    "react-toastify": "1.7.0",
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {

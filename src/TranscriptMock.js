@@ -1,5 +1,5 @@
 const TranscriptMock = {
-  "1": [
+  "0": [
     {
       "final": false,
       "last": null,
