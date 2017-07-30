@@ -63,6 +63,7 @@ class Participants extends Component {
       }));
 
       this.waiting = {status: 'STOPPING', email};
+      window.recorder.toggleDisabled();
       this.sendControlMessage(email, 'STARTING').then(() => window.recorder.startOrResumeRecording(e));
 
       // After n seconds, end the training recording and re-enable the UI.
