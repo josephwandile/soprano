@@ -20,7 +20,7 @@ class Recorder extends Component {
     let file = new File([blob], 'msr-' + timestamp + '.wav', {type: 'audio/wav'});
     let formData = new FormData();
     formData.append('audio', file);
-    return fetch('/submit', {method: 'POST', body: formData}).then(resp => resp.json());
+    return fetch('/submit', {method: 'POST', body: formData, credentials: 'include'}).then(resp => resp.json());
   }
 
   onMediaSuccess = (stream) => {

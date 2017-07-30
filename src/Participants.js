@@ -27,7 +27,7 @@ class Participants extends Component {
     formData.append('email', email);
     const status = this.state.participants[email].training ? 'STOPPING' : 'STARTING';
     formData.append('status', status);
-    fetch('http://localhost:5000/control', {method: 'POST', body: formData});
+    fetch('http://localhost:5000/control', {method: 'POST', body: formData, credentials: 'include'});
 
     const newState = Object.assign(this.state, {
       participants: {
