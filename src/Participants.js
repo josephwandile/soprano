@@ -51,6 +51,7 @@ class Participants extends Component {
       console.log("Currently training.");
     } else {
 
+
       // Start recording for training data
       this.setState(Object.assign(this.state, {
         participants: {
@@ -60,14 +61,13 @@ class Participants extends Component {
           },
         }
       }));
-      window.recorder.toggleDisabled();
+
+      this.waiting = {status: 'STOPPING', email};
       this.sendControlMessage(email, 'STARTING').then(() => window.recorder.startOrResumeRecording(e));
 
       // After n seconds, end the training recording and re-enable the UI.
       setTimeout(() => {
-
-        window.recorder.toggleDisabled();
-        this.sendControlMessage(email, 'STOPPING').then(() => window.recorder.stopRecording(e));
+        window.recorder.stopRecording(e);
 
         this.setState(
           Object.assign(this.state, {
