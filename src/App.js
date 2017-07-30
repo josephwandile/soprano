@@ -16,7 +16,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      transcript: {},
+      transcript: TranscriptMock,//{},
       participants: {},
       summary: null,
     };

@@ -1,32 +1,34 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Segment from './Segment.js';
 
-class Transcript extends Component {
-  render() {
+const Transcript = (props) => {
 
-    let full_transcript = [];
-    let id = "0"
-    for (id in this.props.transcript) {
-      full_transcript = full_transcript.concat(this.props.transcript[id]);
-    }
-    let summary = this.props.summary ? (
-      <div className="content">
-        <h3>
-          Executive Summary
-        </h3>
-        <p>{this.props.summary}</p>
-      </div>
-    ) : null;
-    return (
-      <div className="container">
-        <div className="content">
-          {summary}
-          <h3>Meeting Transcript</h3>
-          <Segment participants={this.props.participants} id={"0"} transcript={full_transcript}/>
-        </div>
-      </div>
-    );
+  // TODO: This is inefficient, but without merging the text snippets it becomes
+  // really difficult to display the transcript usably.
+  let full_transcript = [];
+  for (let id in props.transcript) {
+    full_transcript = full_transcript.concat(props.transcript[id]);
   }
+
+  // Is an executive summary avilable?
+  let summary = props.summary ? (
+    <div className="content">
+      <h3>
+        Executive Summary
+      </h3>
+      <p>{props.summary}</p>
+    </div>
+  ) : null;
+
+  return (
+    <div className="container">
+      <div className="content">
+        {summary}
+        <h3>Meeting Transcript</h3>
+        <Segment participants={props.participants} transcript={full_transcript}/>
+      </div>
+    </div>
+  );
 };
 
 export default Transcript;
