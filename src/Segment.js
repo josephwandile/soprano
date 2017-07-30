@@ -11,24 +11,6 @@ class Segment extends Component {
     };
   }
 
-  componentDidMount() {
-    setTimeout(this.fetchObservation, 1000);
-  }
-
-  fetchObservation = () => {
-    fetch(`http://${window.location.hostname}:8080/observe/${this.props.id}`, {credentials: 'include'})
-      .then(resp => resp.json())
-      .then(resp => {
-        if (resp.error) {
-          return;
-        } else if (resp.retry) {
-          setTimeout(this.fetchObservation, 2000);
-        } else {
-          this.setState({transcript: resp.transcripts});
-        }
-      });
-  }
-
   render() {
 
     // Ignore empty transcripts
@@ -38,12 +20,15 @@ class Segment extends Component {
 
     let items = [];
     let i = 0;
+    let last_speaker = "";
     this.props.transcript.forEach(trans => {
-      if (trans.new) {  // New speaker. Insert line break and speaker tag.
+      let speaker = trans.speaker;
+      if (speaker !== last_speaker) {  // New speaker. Insert line break and speaker tag.
         items.push(<br key={`ogbreak-${i}`}/>)
         items.push(<Speaker key={`break-${i}`} email={trans.speaker} participants={this.props.participants}/>);
       }
       items.push(<Sentence key={`words-${i}`} words={trans.transcript.join(' ')}/>)
+      last_speaker = speaker;
       i++;
     });
     return <div>{items}</div>;
