@@ -3,7 +3,7 @@ import Segment from './Segment.js';
 
 class Transcript extends Component {
   render() {
-    let segments = Object.entries(this.props.transcript).map(([id, trans]) => <Segment id={id} key={id} transcript={trans}/>);
+    let segments = Object.entries(this.props.transcript).map(([id, trans]) => <Segment participants={this.props.participants} id={id} key={id} transcript={trans}/>);
     return <div>{segments}</div>;
   }
 };

@@ -14,6 +14,7 @@ class App extends Component {
 
     this.state = {
       transcript: TranscriptMock,
+      participants: {},
     };
   }
 
@@ -38,6 +39,13 @@ class App extends Component {
     this.setState({transcript});
   }
 
+  addParticipantHandler = (p) => {
+    this.setState({participants: {
+      ...this.state.participants,
+      [p.email]: p.color,
+    }})
+  }
+
   render() {
     return (
       <div>
@@ -52,13 +60,19 @@ class App extends Component {
           </div>
         </div>
         <div className="section">
-          <Participants/>
+          <Participants
+            participants={this.state.participants}
+            onAddParticipant={(p) => this.addParticipantHandler(p)}
+          />
         </div>
         <div className="section">
           <Recorder appendToTranscript={this.appendToTranscript}/>
         </div>
         <div className="section">
-          <Transcript transcript={this.state.transcript}/>
+          <Transcript
+            participants={this.state.participants}
+            transcript={this.state.transcript}
+          />
         </div>
       </div>
     );
