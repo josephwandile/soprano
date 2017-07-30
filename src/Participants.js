@@ -56,7 +56,8 @@ class Participants extends Component {
         [this.state.newEmail]: {
           'training': false,
         },
-      }
+      },
+      newEmail: '',
     }))
   }
 
