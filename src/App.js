@@ -9,14 +9,16 @@ import TranscriptMock from './TranscriptMock.js';
 import 'whatwg-fetch';
 import update from 'immutability-helper';
 import { ToastContainer, toast } from 'react-toastify';
+import * as moment from 'moment'
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      transcript: TranscriptMock,
+      transcript: {},
       participants: {},
+      summary: null,
     };
   }
 
@@ -44,15 +46,21 @@ class App extends Component {
 
   onActions = (actions) => {
     actions.forEach(action => {
-      switch(action) {
+      switch(action.type) {
         case 'calendar':
-          toast(<p>Scheduled calendar event!</p>);
+          toast(
+            <div>
+              <h3>Scheduled calendar event</h3>
+              <h4>See you {moment(action.start_time).fromNow()} at {action.location}!</h4>
+            </div>
+          );
           break;
         case 'ticket':
           toast(<p>Filed JIRA ticket!</p>);
           break;
+        case 'summary':
+          this.setState({summary: action.body});
         default:
-          console.log(action);
           break;
       }
     });
@@ -89,11 +97,12 @@ class App extends Component {
         </div>
         <div className="section">
           <Transcript
+            summary={this.state.summary}
             participants={this.state.participants}
             transcript={this.state.transcript}
           />
         </div>
-        <ToastContainer position="bottom-right" autoClose={4000} />
+        <ToastContainer position="bottom-right" autoClose={10000} />
       </div>
     );
   }
